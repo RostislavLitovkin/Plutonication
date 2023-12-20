@@ -10,10 +10,10 @@ import type { SignerResult } from "@polkadot/api/types/index.js";
 import { AccessCredentials } from "./AccesCredentials";
 import { waitForSignature } from "./helpers.ts/waitForSignature";
 
-class PlutonicationDAppClient {
+export class PlutonicationDAppClient {
   private socket: Socket;
   public pubKey: string | null = null;
-  private injector: Injected | undefined;
+  public injector: Injected | undefined;
 
   constructor(private accessCredentials: AccessCredentials) {
     this.socket = io(this.accessCredentials.url);
@@ -30,12 +30,12 @@ class PlutonicationDAppClient {
         console.log("Received message:", data);
       });
 
-      this.socket?.on("payload_signature", (signature: string) => {
+      this.socket?.on("payload_signature", (signature: SignerResult) => {
         console.log("Received json payload signature:", signature);
       });
   
       // Listen for raw signature from wallet
-      this.socket?.on("raw_signature", (signature: string) => {
+      this.socket?.on("raw_signature", (signature: SignerResult) => {
         console.log("Received raw payload signature:", signature);
       });
 
@@ -52,6 +52,14 @@ class PlutonicationDAppClient {
       });
     });
   }
+
+  public async getInjectorAsync(pubKey: string): Promise<Injected> {
+    const injector = this.createInjector(pubKey);
+    return new Promise<Injected>((resolve) => {
+      this.injector = injector;
+      resolve(injector);
+    });
+  } 
 
   public async sendJsonPayloadAsync(payloadJson: SignerPayloadJSON): Promise<void> {
     return new Promise<void>((resolve) => {
@@ -70,48 +78,12 @@ class PlutonicationDAppClient {
       }
     });
   }
-  // public initialize(): void {
-  //   this.socket?.on("connect", () => {
-  //     console.log("Connected!");
-  //     this.socket?.emit("create_room", { Data: "Nothing", Room: this.accessCredentials.key });
-  //   });
-
-  //   this.socket?.on("message", (data) => {
-  //     console.log("Received message:", data);
-  //   });
-
-  //   // Listen for payload signature from wallet
-  //   this.socket?.on("payload_signature", (signature: string) => {
-  //     console.log("Received payload signature:", signature);
-  //   });
-
-  //   // Listen for raw signature from wallet
-  //   this.socket?.on("raw_signature", (signature: string) => {
-  //     console.log("Received raw signature:", signature);
-  //   });
-  // }
-
-  // public receivePubKey() : void {
-  //   this.socket?.on("pubkey", (pubkey: string) => {
-  //     console.log("Received pubkey:", pubkey);
-  //     this.pubKey = pubkey;
-  //   });
-  // }
-
-  // public sendJsonPayload(payloadJson: SignerPayloadJSON): void {
-  //   if (this.socket) {
-  //     this.socket.emit("sign_payload", { Data: payloadJson, Room: this.accessCredentials.key });
-  //   }
-  // }
-
-  // public sendRawPayload(raw: SignerPayloadRaw): void {
-  //   if (this.socket) {
-  //     this.socket.emit("sign_raw", { Data: raw, Room: this.accessCredentials.key });
-  //   }
-  // }
 
 
-  private createInjector(pubKey: string, socket: Socket, accessCredentials: AccessCredentials): Injected {
+  public createInjector(pubKey: string): Injected {
+    console.log("creating injector");
+    const socket = this.socket;
+    const accessCredentials = this.accessCredentials;
     return {
       accounts: {
         // eslint-disable-next-line @typescript-eslint/require-await
@@ -119,21 +91,34 @@ class PlutonicationDAppClient {
           return [{ address: pubKey }];
         },
         subscribe(_cb: (accounts: InjectedAccount[]) => void | Promise<void>): () => void {
-          return () => {};
+          return () => { };
         },
       },
       signer: {
         async signPayload(payloadJson: SignerPayloadJSON): Promise<SignerResult> {
+          console.log("sending data to request sign");
           // requesting signature from wallet
           socket.emit("sign_payload", { Data: payloadJson, Room: accessCredentials.key });
-          const signature = await waitForSignature();
-          return { id: 0, signature };
+          const signerResult = await new Promise<SignerResult>((resolve) => {
+            socket.on("payload_signature", (receivedPayloadSignature: SignerResult) => {
+              console.log("Received json payload signature:", receivedPayloadSignature);
+              resolve(receivedPayloadSignature);
+            });
+          });
+  
+          return signerResult;
         },
         async signRaw(raw: SignerPayloadRaw): Promise<SignerResult> {
           // requesting signature from wallet
           socket.emit("sign_raw", { Data: raw, Room: accessCredentials.key });
-          const signature = await waitForSignature();
-          return { id: 0, signature };
+          const signerResult = await new Promise<SignerResult>((resolve) => {
+            socket.on("raw_signature", (receivedPayloadSignature: SignerResult) => {
+              console.log("Received raw payload signature:", receivedPayloadSignature);
+              resolve(receivedPayloadSignature);
+            });
+          });
+  
+          return signerResult;
         },
       },
     };
@@ -169,7 +154,7 @@ class PlutonicationDAppClient {
 
   public disconnect(): void {
     if (this.socket) {
-      this.socket.disconnect();
+      this.socket.emit("disconnect");
     }
   }
 
@@ -178,5 +163,3 @@ class PlutonicationDAppClient {
     return uriQr;
   }
 }
-
-export { PlutonicationDAppClient };

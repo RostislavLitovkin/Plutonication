@@ -2,8 +2,10 @@
 import { Socket, io } from "socket.io-client";
 import { AccessCredentials } from "./AccesCredentials";
 import { Keyring } from "@polkadot/keyring";
+import { SignerResult } from "@polkadot/api/types";
+import { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types";
 
-class PlutonicationWalletClient {
+export class PlutonicationWalletClient {
   private socket: Socket | null = null;
   private roomKey = "";
   private keyring: Keyring;
@@ -21,18 +23,18 @@ class PlutonicationWalletClient {
         console.log("Connected to Plutonication Server");
 
       });
-
+      // used for debugging
       this.socket?.on("message", function (data) {
         console.log("Received message:", data);
       });
 
       // Listen dapp request to sign
-      this.socket?.on("sign_payload", (payload: string) => {
+      this.socket?.on("sign_payload", (payload: SignerPayloadJSON) => {
         console.log("Received sign payload request:", payload);
       });
 
       // Listen dapp request to sign
-      this.socket?.on("sign_raw", (payload: string) => {
+      this.socket?.on("sign_raw", (payload: SignerPayloadRaw) => {
         console.log("Received sign payload request:", payload);
       });
 
@@ -50,11 +52,11 @@ class PlutonicationWalletClient {
     });
   }
 
-  public async sendSignedPayloadAsync(payloadSignature: string): Promise<void> {
+  public async sendSignedPayloadAsync(signerResult: SignerResult): Promise<void> {
     return new Promise<void>((resolve) => {
       if (this.socket) {
         this.socket.emit("payload_signature", {
-          Data: payloadSignature,
+          Data: signerResult,
           Room: this.roomKey,
         });
         resolve();
@@ -62,11 +64,11 @@ class PlutonicationWalletClient {
     });
   }
 
-  public async sendSignedRawAsync(rawMessage: string): Promise<void> {
+  public async sendSignedRawAsync(signerResult: SignerResult): Promise<void> {
     return new Promise<void>((resolve) => {
       if (this.socket) {
         this.socket.emit("raw_signature", {
-          Data: rawMessage,
+          Data: signerResult,
           Room: this.roomKey,
         });
         resolve();
@@ -74,61 +76,9 @@ class PlutonicationWalletClient {
     });
   }
 
-  // public initialize(): void{
-  //   void new Promise<void>((resolve) => {
-  //     this.socket?.on("connect", () => {
-  //       console.log("Connected to Plutonication Server");
-  //       resolve();
-  //     });
-  //   });
-
-  //   this.socket?.on("message", function (data) {
-  //     console.log("Received message:", data);
-  //   });
-
-  //   // Escuchar solicitud de firma desde la DApp
-  //   this.socket?.on("sign_payload", (payload: string) => {
-  //     console.log("Received sign payload request:", payload);
-  //   });
-
-  //   // Escuchar solicitud de firma desde la DApp
-  //   this.socket?.on("sign_raw", (payload: string) => {
-  //     console.log("Received sign payload request:", payload);
-  //   });
-  // }
-
-  // public  sendSignedPayload(payloadSignature: string): void {
-  //   if (this.socket) {
-  //     this.socket.emit("payload_signature", {
-  //       Data: payloadSignature,
-  //       Room: this.roomKey,
-  //     });
-  //   }
-  // }
-
-  // public sendSignedRaw(rawMessage: string): void {
-  //   if (this.socket) {
-  //     this.socket.emit("raw_signature", {
-  //       Data: rawMessage,
-  //       Room: this.roomKey,
-  //     });
-  //   }
-  // }
-
-  // public  sendPublicKey(publicKey: string): void {
-  //   if (this.socket) {
-  //     console.log("Sending public key: ", publicKey);
-  //     this.socket.emit("pubkey", { Data: publicKey, Room: this.roomKey });
-  //   }
-  // }
-
   public disconnect(): void {
-    if (this.socket && this.socket.connected) {
-      this.socket.disconnect();
+    if (this.socket) {
+      this.socket.emit("disconnect");
     }
   }
 }
-
-export { PlutonicationWalletClient };
-
-

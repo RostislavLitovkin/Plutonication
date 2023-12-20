@@ -4,6 +4,7 @@
   <title>Generador de Código QR en un Web Component</title>
   <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
   <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
+  <!-- <script src="../../PlutonicationDAppClient.js"></script> -->
   <!-- <script type="module" src="PlutonicationDAppClient.js"></script> -->
 </head>
 <body>
@@ -147,7 +148,7 @@
         <div class="scan-qr-title-container" id="scan-qr-title-container">
           <p class="scan-qr-title" id="scan-qr-title">Plutonication Connect</p>
         </div>
-        <img class="qr-back-arrow" id="qr-back-arrow" alt="close" src="../../assets/svg/Arrow Back.svg" width={25} height={25}></div>
+        <img class="qr-back-arrow" id="qr-back-arrow" alt="close" src="../../../assets/svg/Arrow Back.svg" width={25} height={25}></div>
         <div class="qr-code-container" id="qr-code-container">
           <div class="qr-code" id="qr-code"></div>
         </div>
@@ -166,6 +167,7 @@
 </template>
 
 <script type="module">
+  import { PlutonicationDappClient} from "../../PlutonicationDAppClient"
   // const accesCredentials = require("../AccesCredentials")
   customElements.define('qr-generator', class extends HTMLElement {
     constructor() {
@@ -187,7 +189,7 @@
       let inputValue = "";
 
       generateButton.addEventListener('click', () => {
-        inputValue = 'Texto predefinido'; // Aquí establece el string predeterminado
+        inputValue = 'Texto predefinido'; // Aquí establece el string con el que debo de crear el QR el de accesCredentials
        
         scanQrContainer.style.display = 'block';
         qrContainer.style.display = 'flex';
@@ -204,7 +206,7 @@
         } else {
           alert('Por favor ingresa un texto para generar el QR.');
         }
-        // Simulación de conexión después de un tiempo (para propósitos de demostración)
+        // Simulación de conexión mientras establezco la real
         setTimeout(() => {
           console.log("Connecting to server...")
           connectToServerAndListen();
@@ -220,17 +222,23 @@
         welcomeHeader.style.display = 'block';
       });
     
-      const connectToServerAndListen = () => {
+      const connectToServerAndListen = async () => {
         const socket = io('wss://plutonication-acnha.ondigitalocean.app/');
-        socket.on('connect', () => {
+        await socket.on('connect', () => {
           console.log('Conectado a través de WebSocket con Socket.IO');
           socket.emit("create_room", { Data: "Nothing", Room: 1 });
           // receivePubKey(socket, "5C9tkbJ1wG8eieJDpwHunicxPpf7P8MqLLuv2GPTHgsERnqE");
-          receivePubKey(socket);
+          // receivePubKey(socket);
         });
 
-        socket?.on("message", (data) => {
+        await socket?.on("message", (data) => {
           console.log("Received message:", data);
+        });
+
+        await socket.on("pubkey", (publicKey) => {
+          console.log("Received pubkey:", publicKey);
+          // Actualizar la interfaz con la public key recibida
+          connectionInfoDiv.textContent = `Conectado con la public key: ${publicKey}`;
         });
       };
 
@@ -240,13 +248,15 @@
           // Actualizar la interfaz con la public key recibida
           connectionInfoDiv.textContent = `Conectado con la public key: ${publicKey}`;
         });
-        connectionInfoDiv.style.display = 'block';
-        // connectionInfoDiv.textContent = `Conectado con la public key: ${pubKey}`;
-        qrCodeDiv.style.display = 'none';
-        scanQrContainer.style.display = "none";
-        qrContainer.style.display = 'none';
-        scanText.style.display = 'none';
-        disconnectBtn.style.display = "block"
+        if (pubKey !== "") {
+          connectionInfoDiv.style.display = 'block';
+          // connectionInfoDiv.textContent = `Conectado con la public key: ${pubKey}`;
+          qrCodeDiv.style.display = 'none';
+          scanQrContainer.style.display = "none";
+          qrContainer.style.display = 'none';
+          scanText.style.display = 'none';
+          disconnectBtn.style.display = "block"
+        }
       }
 
       disconnectBtn.addEventListener('click', () => {

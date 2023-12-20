@@ -1,12 +1,9 @@
 // Small example of how to send the payloads request to be signed  to the  
 //wallet using PlutonicationDappClient function
 
-import type { Injected, InjectedAccount } from "@polkadot/extension-inject/types";
-import type { SignerPayloadJSON, SignerPayloadRaw, SignerResult } from "@polkadot/types/types";
-import { waitForSignature } from "../helpers.ts/waitForSignature";
+import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types";
 import { AccessCredentials } from "../AccesCredentials";
 import { PlutonicationDAppClient } from "../PlutonicationDAppClient";
-import { ApiPromise, WsProvider } from "@polkadot/api";
 
 const dappClientUsage = async() : Promise<void> => {
   const accessCredentials = new AccessCredentials(
@@ -48,9 +45,16 @@ const dappClientUsage = async() : Promise<void> => {
     // Use the pubKey as need it
     console.log("La pubKey es:", pubKey);
 
+    // Use the injector object to send transactions
+    const injector = await dappClient.getInjectorAsync(pubKey);
+
+    await injector.signer.signPayload(payloadJson);
+    await injector.signer.signRaw(payloadRaw);
+
+
     // Send paylaod request to be signed
-    await dappClient.sendJsonPayloadAsync(payloadJson);
-    await dappClient.sendRawPayloadAsync(payloadRaw);
+    // await dappClient.sendJsonPayloadAsync(payloadJson);
+    // await dappClient.sendRawPayloadAsync(payloadRaw);
 
   } catch (error) {
     console.error("Error:", error);

@@ -1,14 +1,13 @@
 import { AccessCredentials } from "./AccesCredentials";
-declare class PlutonicationWalletClient {
+export declare class PlutonicationWalletClient {
     private accessCredentials;
     private socket;
     private roomKey;
     private keyring;
     constructor(accessCredentials: AccessCredentials);
-    initialize(): void;
-    sendSignedPayload(payloadSignature: string): void;
-    sendSignedRaw(rawMessage: string): void;
-    sendPublicKey(publicKey: string): void;
+    initializeAsync(): Promise<void>;
+    sendPublicKeyAsync(publicKey: string): Promise<void>;
+    sendSignedPayloadAsync(payloadSignature: string): Promise<void>;
+    sendSignedRawAsync(rawMessage: string): Promise<void>;
     disconnect(): void;
 }
-export { PlutonicationWalletClient };

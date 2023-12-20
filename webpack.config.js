@@ -5,7 +5,7 @@ const CopyPlugin = require('copy-webpack-plugin');
 
 module.exports = {
   mode: "production",
-  entry: "./main.tsx",
+  entry: "/src/components/PlutonicationQrPopUp/index.js",
   output: {
     // path: path.resolve(__dirname, "dist"),
     // filename: "bundle.js",
