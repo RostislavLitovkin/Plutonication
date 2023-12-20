@@ -1,0 +1,29 @@
+{
+  "name": "@plutonication/plutonication",
+  "version": "1.0.0",
+  "description": "TypeScript version of C# plutonication library",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+
+  "scripts": {
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "devDependencies": {
+    "typescript": "^5.2.2"
+  },
+  "compilerOptions": {
+    "strict": true
+  },
+  "dependencies": {
+    "@polkadot/api": "^10.10.1",
+    "@polkadot/extension-dapp": "^0.46.5",
+    "@polkadot/extension-inject": "^0.46.5",
+    "@substrate/connect": "^0.7.34",
+    "socket.io": "^4.7.2",
+    "socket.io-client": "^4.7.2"
+  }
+ 
+}
