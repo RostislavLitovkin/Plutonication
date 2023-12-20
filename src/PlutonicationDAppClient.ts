@@ -10,7 +10,7 @@ import type { SignerResult } from "@polkadot/api/types/index.js";
 import { AccessCredentials } from "./AccesCredentials";
 import { waitForSignature } from "./helpers.ts/waitForSignature";
 
-export class PlutonicationDAppClient {
+export  class PlutonicationDAppClient {
   private socket: Socket;
   public pubKey: string | null = null;
   public injector: Injected | undefined;

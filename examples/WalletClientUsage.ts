@@ -4,8 +4,9 @@
 import { Keyring } from "@polkadot/keyring";
 import { cryptoWaitReady, mnemonicGenerate, encodeAddress } from "@polkadot/util-crypto";
 import { stringToU8a, u8aToHex } from "@polkadot/util";
-import { AccessCredentials } from "../AccesCredentials";
-import { PlutonicationWalletClient } from "../PlutonicationWalletClient";
+import { PlutonicationWalletClient } from "./../src/PlutonicationWalletClient";
+import { AccessCredentials } from "../src/AccesCredentials";
+
 
 const walletClientUsage = async(): Promise<void> => {
   const accessCredentials = new AccessCredentials(

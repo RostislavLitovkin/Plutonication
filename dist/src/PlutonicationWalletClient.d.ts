@@ -1,4 +1,5 @@
 import { AccessCredentials } from "./AccesCredentials";
+import { SignerResult } from "@polkadot/api/types";
 export declare class PlutonicationWalletClient {
     private accessCredentials;
     private socket;
@@ -7,7 +8,7 @@ export declare class PlutonicationWalletClient {
     constructor(accessCredentials: AccessCredentials);
     initializeAsync(): Promise<void>;
     sendPublicKeyAsync(publicKey: string): Promise<void>;
-    sendSignedPayloadAsync(payloadSignature: string): Promise<void>;
-    sendSignedRawAsync(rawMessage: string): Promise<void>;
+    sendSignedPayloadAsync(signerResult: SignerResult): Promise<void>;
+    sendSignedRawAsync(signerResult: SignerResult): Promise<void>;
     disconnect(): void;
 }

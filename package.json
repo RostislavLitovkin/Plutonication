@@ -34,6 +34,7 @@
   },
   "homepage": "https://github.com/RostislavLitovkin/Plutonication#readme",
   "devDependencies": {
+    "@babel/plugin-proposal-export-default-from": "^7.23.3",
     "@babel/preset-env": "^7.23.3",
     "@babel/preset-react": "^7.22.15",
     "@babel/preset-typescript": "^7.23.2",
