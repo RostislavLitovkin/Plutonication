@@ -2,7 +2,7 @@
 //wallet using PlutonicationDappClient function
 
 import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types";
-import { AccessCredentials, PlutonicationDAppClient } from "..";
+import { AccessCredentials, PlutonicationDAppClient } from "../..";
 
 
 const dappClientUsage = async() : Promise<void> => {

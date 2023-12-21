@@ -4,7 +4,7 @@
 import { Keyring } from "@polkadot/keyring";
 import { cryptoWaitReady, mnemonicGenerate, encodeAddress } from "@polkadot/util-crypto";
 import { stringToU8a, u8aToHex } from "@polkadot/util";
-import { AccessCredentials, PlutonicationWalletClient } from "..";
+import { AccessCredentials, PlutonicationWalletClient } from "../..";
 
 
 
