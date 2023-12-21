@@ -6,6 +6,8 @@
       "dom"
     ], // specifies which default set of type definitions to use ("DOM", "ES6", etc)
     "outDir": "lib", // .js (as well as .d.ts, .js.map, etc.) files will be emitted into this directory.,
+    "declaration": true,
+    "declarationDir": "./types",
     "removeComments": true, // Strips all comments from TypeScript files when converting into JavaScript- you rarely read compiled code so this saves space
     "target": "ES6", // Target environment. Most modern browsers support ES6, but you may want to set it to newer or older. (defaults to ES3)
 
@@ -27,7 +29,10 @@
     "noImplicitReturns": true,
     "noUncheckedIndexedAccess": true, // accessing index must always check for undefined
     "noUnusedLocals": true, // Report errors on unused local variables.
-    "noUnusedParameters": true // Report errors on unused parameters in functions
+    "noUnusedParameters": true, // Report errors on unused parameters in functions
+    // Allowing package to be used in js proyects
+    "allowJs": true,
+    "checkJs": true,
   },
   "include": ["./**/*.ts"],
   "exclude": [

@@ -1,9 +1,9 @@
 {
   "name": "@plutonication/plutonication",
-  "version": "1.0.52",
+  "version": "1.0.53",
   "description": "TypeScript version of C# plutonication library",
   "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
+  "types": "./types",
 
   "scripts": {
     "build": "tsc"
