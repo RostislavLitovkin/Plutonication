@@ -1,9 +1,5 @@
 node_modules/
-build/
-coverage/
-*.log
-*.md
-*.bak
-test/
-tests/
-__tests__/
+.github
+src/
+index.ts
+tsconfig.json
