@@ -2,15 +2,12 @@
 // @packages
 import { ApiPromise, WsProvider } from "@polkadot/api";
 import { Socket, io } from "socket.io-client";
-import type { Injected, InjectedAccount, Unsubcall } from "@polkadot/extension-inject/types";
+import type { Injected, InjectedAccount } from "@polkadot/extension-inject/types";
 import type { SignerPayloadJSON, SignerPayloadRaw  } from "@polkadot/types/types";
 import type { SignerResult } from "@polkadot/api/types/index.js";
 import AccessCredentials from "./AccessCredentials";
 
 // @scripts
-
-
-
 
 class PlutonicationDAppClient {
   private socket: Socket;

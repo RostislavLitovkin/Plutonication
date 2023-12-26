@@ -1,6 +1,5 @@
 // @packages
 import { Socket, io } from "socket.io-client";
-import { Keyring } from "@polkadot/keyring";
 import { SignerResult } from "@polkadot/api/types";
 import { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types";
 import AccessCredentials from "./AccessCredentials";
@@ -10,13 +9,10 @@ import AccessCredentials from "./AccessCredentials";
 class PlutonicationWalletClient {
   private socket: Socket | null = null;
   private roomKey = "";
-  private keyring: Keyring;
 
   constructor(private accessCredentials: AccessCredentials) {
-    this.roomKey = accessCredentials.key;
+    this.roomKey = this.accessCredentials.key;
     this.socket = io(accessCredentials.url);
-    
-    this.keyring = new Keyring({ type: "sr25519" });
   }
 
   public async initializeAsync(): Promise<void> {

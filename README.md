@@ -29,7 +29,12 @@ In a react application you can use it like this:
 
 #### Import PlutonicationDAppClient
 ```javascript
-import { PlutonicationDAppClient, AccessCredentials, PlutonicationQrPopUp } from '@plutonication/plutonication';
+// If is a typescript project
+import { AccessCredentials, PlutonicationDAppClient, PlutonicationWalletClient } from '@plutonication/plutonication';
+
+// If is a javascript project
+import Plutonication from '@plutonication/plutonication';
+const { AccessCredentials, PlutonicationDAppClient, PlutonicationWalletClient } = Plutonication;
 ```
 
 #### Initialize the Connection and send transactions

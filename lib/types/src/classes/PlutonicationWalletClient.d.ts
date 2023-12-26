@@ -4,7 +4,6 @@ declare class PlutonicationWalletClient {
     private accessCredentials;
     private socket;
     private roomKey;
-    private keyring;
     constructor(accessCredentials: AccessCredentials);
     initializeAsync(): Promise<void>;
     sendPublicKeyAsync(publicKey: string): Promise<void>;
