@@ -6,7 +6,7 @@ module.exports = {
   entry: './src/components/PlutonicationQr.js',
   output: {
     path: path.resolve(__dirname, 'lib'),
-    filename: 'bundle.js',
+    filename: 'src/componets/bundle.js',
   },
   resolve: {
     extensions: [".ts", ".js"],

@@ -3,3 +3,9 @@ node_modules/
 src/
 index.ts
 tsconfig.json
+.babelrc
+todo.md
+!lib/assets/
+!lib/src/classes
+!lib/types/index.d.ts
+!lib/types/src/classes
