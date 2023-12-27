@@ -1,172 +1,10 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Generador de Código QR en un Web Component</title>
-  <script src="https://cdn.rawgit.com/davidshimjs/qrcodejs/gh-pages/qrcode.min.js"></script>
-  <script src="https://cdn.socket.io/4.3.2/socket.io.min.js"></script>
-</head>
-<body>
+import { Socket, io } from "socket.io-client";
 
-<template id="qr-generator-template">
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@500&family=Lexend:wght@500&family=Roboto&display=swap');
-
-    * {
-      font-family: 'Lexend', serif !important;
-    }
-    .qr-container {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      text-size-adjust: none;
-      -webkit-text-size-adjust: none;
-    
-      background-color: rgb(14, 16, 16);
-      color: #f0f0f0;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 100vh;
-    }
-
-    h1, h2, h3, h4, h5, h6 {
-      margin: 0;
-      padding: 0;
-    }
-
-    ul, ol {
-      margin: 0;
-      padding: 0;
-      list-style: none; 
-    }
-
-    button:hover {
-      cursor: pointer;
-    }
-
-    .disconnect-btn {
-      display: none;
-    }
-
-    .scan-qr-container {
-      display: none
-    }
-
-    .generate-btn-container {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      margin-top: 1rem;
-    }
-
-    .generate-btn, .disconnect-btn{
-      background-color: #f0f0f0;
-      padding: 0.5rem;
-      color: rgb(14, 16, 16);
-      font-weight: 500;
-      font-family: 'Lexend', serif;
-      border-radius: 0.3rem;
-      transition: transform 0.2s ease;
-    }
-
-    .generate-btn:hover, .disconnect-btn:hover {
-      transform: scale(1.05);
-      cursor: pointer;
-    }
-
-    .disconnect-btn {
-      display: none;
-    }
-
-    .scan-qr-title-container {
-      display: inline;
-      position: relative;
-      top: 4.2rem;
-      z-index: 1;
-    }
-
-    .scan-qr-title, .scan-qr-text, .connection-info  {
-      text-align: center;
-      margin: 0;
-    }
-
-    .qr-back-arrow {
-      display: inline;
-      position: relative;
-      left: 3rem;
-      top: 2.8rem;
-      z-index: 1;
-      transition: transform 0.4s ease;
-    }
-
-    .qr-back-arrow:hover {
-      transform: scale(1.1);
-      cursor: pointer;
-    }
-
-    .qr-code-container {
-      align-items: center;
-      justify-content: center;
-      border-radius: 1rem;
-      padding: 3.5rem;
-      background-color: rgb(24, 27, 26);
-      opacity: 1;
-      transform: scale(1);
-      transition: opacity 1s ease, transform 1s ease;
-      position: relative;
-      display: none;
-    }
-    
-    .qr-code {
-      border-radius: 1rem;
-      padding: 2rem;
-      background-color: white;
-    }
-
-    .scan-qr-text-container {
-      position: relative;
-      bottom: 2.2rem;
-      z-index: 1;
-      display: none;
-    }
-
-    .connection-info {
-      margin-top: 3.125rem;
-      display: none;
-    }
-
-  </style>
-  <div class="qr-container" id="qr-container">
-    <div>
-      <h4 class="welcome-title" id="welcome-title">Welcome to Plutonication</h4>
-      <div class="generate-btn-container" id="generate-btn-container">
-        <button class="generate-btn" id="generate-btn">Generar QR</button>
-      </div>
-      <div class="scan-qr-container" id="scan-qr-container">
-        <div class="scan-qr-title-container" id="scan-qr-title-container">
-          <p class="scan-qr-title" id="scan-qr-title">Plutonication Connect</p>
-        </div>
-        <img class="qr-back-arrow" id="qr-back-arrow" alt="close" src="../../assets/svg/Arrow Back.svg" width={25} height={25}></div>
-        <div class="qr-code-container" id="qr-code-container">
-          <div class="qr-code" id="qr-code"></div>
-        </div>
-        <div class="scan-qr-text-container" id="scan-qr-text-container">
-          <p class="scan-qr-text" id="scan-qr-text">Scan this QR with your phone</p>
-        </div>
-      </div>
-      <div>
-        <div id="connection-info" class="connection-info">Connected to: </div>
-        <div class="generate-btn-container" id="generate-btn-container">
-          <button class="disconnect-btn" id="disconnect-btn">Disconnect</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</template>
-
-<script type="module">
-  class AccessCredentials {
+class AccessCredentials {
+  url: string;
+  key: string;
+  name: string;
+  icon: string;
 
   constructor(url, key, name, icon) {
     this.url = url || this.ToUri();
@@ -207,13 +45,15 @@ console.log("accessCredentials", accessCredentials.ToUri());
 
 
 class PlutonicationDAppClient {
+  socket: Socket;
+  pubKey: string;
 
   constructor(accessCredentials) {
     this.socket = io(accessCredentials.url);
   }
 
    async initializeAsync() {
-    return new Promise((resolve) => {
+    return new Promise<void>((resolve) => {
       this.socket?.on("connect", () => {
         console.log("Connected!");
         this.socket?.emit("create_room", { Data: "Nothing", Room: accessCredentials.key });
@@ -254,10 +94,11 @@ class PlutonicationDAppClient {
   }
 }
 
-  customElements.define('qr-generator', class extends HTMLElement {
+  class QRGenerator extends HTMLElement {
     constructor() {
       super();
-      let template = document.getElementById('qr-generator-template').content;
+      // let template = document.getElementById('qr-generator-template').content;
+      let template = (document.getElementById('qr-generator-template') as HTMLTemplateElement).content;
       let shadowRoot = this.attachShadow({mode: 'open'});
       shadowRoot.appendChild(template.cloneNode(true));
 
@@ -272,7 +113,7 @@ class PlutonicationDAppClient {
       let connectionInfoDiv = shadowRoot.getElementById('connection-info');
       let disconnectBtn = shadowRoot.getElementById('disconnect-btn');
       let backToConnectBtn = shadowRoot.getElementById('qr-back-arrow');
-      let qrDiv = shadowRoot.getElementById("qr-container");
+      // let qrDiv = shadowRoot.getElementById("qr-container");
       let inputValue = "";
 
 
@@ -287,11 +128,11 @@ class PlutonicationDAppClient {
         welcomeHeader.style.display = 'none';
         if (inputValue.trim() !== '') {
           // Generar el código QR
-          new QRCode(qrCodeDiv, {
-            text: inputValue,
-            width: 200,
-            height: 200,
-          });
+          // new QRCode(qrCodeDiv, {
+          //   text: inputValue,
+          //   width: 200,
+          //   height: 200,
+          // });
         } else {
           console.log("Error generating QR Code");
         }
@@ -346,10 +187,7 @@ class PlutonicationDAppClient {
           disconnectBtn.style.display = 'none';
         });
     }
-  });
-</script>
+  };
 
-<qr-generator></qr-generator>
-
-</body>
-</html>
+  customElements.define('qr-generator', QRGenerator);
+  export default QRGenerator;
