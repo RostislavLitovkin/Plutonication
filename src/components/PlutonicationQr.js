@@ -1,33 +1,3 @@
-// @ts-nocheck
-// // Importa la librería socket.io-client
-// class MiWebComponent extends HTMLElement {
-//   constructor() {
-//     super();
-
-//     const shadow = this.attachShadow({ mode: 'open' });
-//     const paragraph = document.createElement('p');
-
-//     // Agrega el mensaje predeterminado si no se proporciona ninguno
-//     const message = this.getAttribute('message') || 'Mensaje por defecto';
-//     paragraph.textContent = message;
-
-//     shadow.appendChild(paragraph);
-
-//     // Crea una conexión a un servidor de Socket.IO
-//     const socket = io('"wss://plutonication-acnha.ondigitalocean.app/');
-
-//     socket?.on("message", (data) => {
-//       console.log("Received message:", data);
-//     });
-
-//     // Escucha eventos del servidor y actualiza el mensaje en el web component
-//     socket.on('messageFromServer', (data) => {
-//       paragraph.textContent = `Mensaje desde el servidor: ${data}`;
-//     });
-//   }
-// }
-
-// customElements.define('mi-web-component', MiWebComponent);
 class AccessCredentials {
 
   constructor(url, key, name, icon) {
@@ -321,6 +291,9 @@ class PlutonicationDAppClient {
 
 
       generateButton.addEventListener('click', async() => {
+        await openQr()
+      });
+      const openQr = async () => {
         inputValue = accessCredentials.ToUri(); 
        
         scanQrContainer.style.display = 'block';
@@ -339,9 +312,8 @@ class PlutonicationDAppClient {
           console.log("Error generating QR Code");
         }
         await connectToServerAndListen();
-        
-      });
-
+      }
+ 
       backToConnectBtn.addEventListener('click', () => {
         dappClient.disconnectServer();
         qrCodeDiv.innerHTML = ''
@@ -375,19 +347,23 @@ class PlutonicationDAppClient {
       };
 
       disconnectBtn.addEventListener('click', () => {
-          console.log('Desconexión iniciada');
-          if (dappClient) {
-            dappClient.disconnectServer();
-          } else {
-            console.log('dappClient is not connected');
-          }
-          qrCodeDiv.innerHTML = '';
-          qrCodeDiv.style.display = 'block';
-          generateButton.style.display = 'block';
-          welcomeHeader.style.display = 'block';
-          connectionInfoDiv.style.display = 'none';
-          disconnectBtn.style.display = 'none';
-        });
+        hideQr();
+      });
+
+      const hideQr = () => {
+        console.log('Desconexión iniciada');
+        if (dappClient) {
+          dappClient.disconnectServer();
+        } else {
+          console.log('dappClient is not connected');
+        }
+        qrCodeDiv.innerHTML = '';
+        qrCodeDiv.style.display = 'block';
+        generateButton.style.display = 'block';
+        welcomeHeader.style.display = 'block';
+        connectionInfoDiv.style.display = 'none';
+        disconnectBtn.style.display = 'none';
+      }
     }
   };
 
