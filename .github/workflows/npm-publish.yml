@@ -8,7 +8,7 @@ on:
     types: [created]
   push:
     branches:
-      - main
+      - fix/Initializing-plutonication-ts-version-improved
 
 jobs:
   build:
