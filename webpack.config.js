@@ -13,7 +13,6 @@ module.exports = {
   },
   module: {
     rules: [
-      // Regla para archivos TypeScript y TypeScript React
       {
         test: /\.(ts|tsx)$/,
         exclude: /node_modules/,
@@ -24,7 +23,6 @@ module.exports = {
           },
         },
       },
-      // Regla para archivos JavaScript y JavaScript React
       {
         test: /\.(js|jsx)$/,
         exclude: /node_modules/,
@@ -38,11 +36,9 @@ module.exports = {
       // Regla para archivos CSS
       {
         test: /\.css$/,
-        // use: [MiniCssExtractPlugin.loader, 'css-loader'],
         use: ['style-loader', 'css-loader'],
         include: path.resolve(__dirname, '/'), 
       },
-      // Regla para archivos de imágenes
       {
         test: /\.(png|jpe?g|gif)$/i,
         type: 'asset/resource',
@@ -50,7 +46,6 @@ module.exports = {
           filename: 'assets/images/[name][ext]',
         },
       },
-      // Regla para archivos SVG
       {
         test: /\.svg$/i,
         type: 'asset/resource', 
@@ -66,7 +61,6 @@ module.exports = {
         {
           from: path.resolve(__dirname, './assets'),
           to: path.resolve(__dirname, 'lib/assets'),
-          // Puedes añadir más opciones aquí si es necesario
         },
       ],
     }),

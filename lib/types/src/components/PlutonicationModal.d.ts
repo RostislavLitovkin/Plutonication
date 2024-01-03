@@ -18,6 +18,9 @@ declare class PlutonicationModal extends HTMLElement {
     disconnectBtn: HTMLElement;
     backToConnectBtn: HTMLElement;
     constructor();
+    generateQRCode(text: any, width: any, height: any): HTMLCanvasElement;
+    generateQRMatrix(text: any): any[];
+    generarQR(text: any): void;
     showQR(accesCredentials: AccessCredentials): void;
     hideQR(): void;
 }

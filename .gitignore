@@ -35,5 +35,8 @@ config.ts
 # Ignore any backup files
 *~
 
-#Ignore slintignore
+# Ignore slintignore
 .eslintignore
+
+# Ignore the result
+lib
