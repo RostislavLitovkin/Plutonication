@@ -63,8 +63,6 @@ A detailed description of the Plutonication implementation can be found:
 The following docker file runs the sample React dApp, which can be used for testing all plutonication dApp functionalities.
 
 ```
-# !!! Do not forget to build Plutonication first before trying to run this example dApp !!!
-
 # Navigate to the react example folder
 cd packages
 cd react-example-dapp
@@ -77,8 +75,6 @@ docker run -p 3000:3000 plutonication-react-dapp-example
 ### Run locally
 
 ```
-# !!! Do not forget to build Plutonication first before trying to run this example dApp !!!
-
 # Navigate to the react example folder
 cd packages
 cd react-example-dapp
