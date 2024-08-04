@@ -113,7 +113,7 @@ To get a more in-depth details of the underlying backend, read this guide: https
 The provided unit tests showcase most of the Plutonication capabilities.
 
 ```
-# !!! Do not forget to build Plutonication first before trying to run this example dApp !!!
+# !!! Do not forget to build Plutonication first before trying to run Unit tests !!!
 
 # Navigate to the tests folder
 cd packages
