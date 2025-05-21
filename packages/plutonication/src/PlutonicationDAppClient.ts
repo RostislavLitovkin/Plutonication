@@ -1,8 +1,7 @@
 import { io } from "socket.io-client"
 import type { Injected, InjectedAccount, InjectedWindow } from "@polkadot/extension-inject/types"
-import type { SignerPayloadJSON, SignerPayloadRaw, ISubmittableResult } from "@polkadot/types/types"
+import type { SignerPayloadJSON, SignerPayloadRaw } from "@polkadot/types/types"
 import type { SignerResult } from "@polkadot/api/types"
-import type { H256 } from "@polkadot/types/interfaces"
 import { AccessCredentials } from "./AccessCredentials"
 import { PlutonicationModal } from "./components/PlutonicationModal"
 
@@ -99,9 +98,6 @@ export async function initializePlutonicationDAppClient(
         })
 
         return signerResult
-      },
-      update(id: number, status: H256 | ISubmittableResult): void {
-        socket.emit("update", { Data: { Id: id, Status: status }, Room: roomKey })
       }
     },
 

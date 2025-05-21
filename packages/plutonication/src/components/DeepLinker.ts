@@ -53,7 +53,7 @@ export function initializeDeepLinker(
         }
       }, dialogTimeout);
 
-      window.location = url as Location | (string & Location);
+      window.location.href = url;
     }
   }
 }
