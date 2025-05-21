@@ -1,0 +1,1 @@
+Allow wireless connection of plutonication wallets to polkadot js compatible dApps.

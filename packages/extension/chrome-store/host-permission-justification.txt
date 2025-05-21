@@ -1,0 +1,1 @@
+This extension requires host permissions to access specific websites in order to fulfill its primary functionality. These permissions allow the extension to read and modify content on designated domains, which is necessary to provide features such as adding a pop up window for displaying QR code login and injecting underlying web-socket connection code.
